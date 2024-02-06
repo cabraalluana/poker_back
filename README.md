@@ -50,9 +50,12 @@ Para executar a aplicação, siga estes passos:
    pip install -r requirements.txt
    ```
 
-Agora você está pronto para iniciar a aplicação!
+6. Agora você está pronto para iniciar a aplicação! Para executar o programa, basta digitar o seguinte comando no terminal:
+   ```
+   python main.py
+   ```
 
 # Observações
 
-- Lembre-se sempre de ativar o ambiente virtual ao abrir uma nova sessão no Visual Studio Code.
+- Lembre-se sempre de ativar o ambiente virtual ao abrir uma nova sessão no Visual Studio Code;
 - Após instalar novas dependências, não se esqueça de atualizar o arquivo "requirements.txt" executando o comando `pip freeze > requirements.txt` para manter o arquivo atualizado.

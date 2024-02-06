@@ -1,5 +1,6 @@
 # Importa a biblioteca SQLite
 import sqlite3
+import os
 
 # Conectar ao banco de dados
 conn = sqlite3.connect('bdPoker.db')
@@ -84,3 +85,44 @@ def consultar_mesas_e_codigos(id_mesas):
         resultados.append(cursor.fetchall())
 
     return resultados
+
+def criar_pastas_mesas_ativas():
+    # Caminho onde deseja criar as pastas
+    caminho_pasta = 'mesas_ativas'
+
+    # Consulta para selecionar idCodigo e status da tabela
+    cursor.execute("SELECT idMesa, status FROM TABELA_MESA")
+
+    # Iterar sobre os resultados
+    for row in cursor.fetchall():
+        idCodigo, status = row
+        if status == 'ativo':
+            # Criar o nome da pasta
+            nome_pasta = f'mesa_{idCodigo}'
+            
+            # Caminho completo da pasta
+            caminho_completo = os.path.join(caminho_pasta, nome_pasta)
+            
+            # Verificar se a pasta não existe antes de criar
+            if not os.path.exists(caminho_completo):
+                os.makedirs(caminho_completo)
+                print(f"Pasta '{caminho_completo}' criada com sucesso.")
+
+def separar_codigos():
+    # Consulta SQL para obter o nome do arquivo e o id da mesa
+    consulta = """
+    SELECT TC.arquivo, CM.idMesa
+    FROM CODIGO_MESA CM
+    JOIN TABELA_CODIGO TC ON CM.idCodigo = TC.idCodigo;
+    """
+
+    # Executar a consulta
+    cursor.execute(consulta)
+
+    # Fetchall para obter todos os resultados
+    resultados = cursor.fetchall()
+
+    # Criar lista com idMesa e arquivo
+    lista_id_arquivo = [(idMesa, arquivo) for arquivo, idMesa in resultados]
+
+    return lista_id_arquivo
