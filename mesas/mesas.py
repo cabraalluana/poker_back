@@ -1,6 +1,8 @@
 # Importa as bibliotecas necessárias
 import random
 import math
+import shutil
+import os
 from mesas import bdMesas  # Importa o módulo bdMesas
 from prettytable import PrettyTable
 
@@ -111,3 +113,58 @@ def consultar_mesas_e_codigos(id_mesas):
 
     # Imprimir a tabela formatada
     print(tabela)
+
+def criar_pastas_mesas_ativas():
+    bdMesas.criar_pastas_mesas_ativas()
+
+def separar_codigos():
+    return bdMesas.separar_codigos()
+
+def dividir_codigo_mesas(lista_arquivos):
+    # Percorre a lista de arquivos
+    for id_mesa, nome_arquivo in lista_arquivos:
+        # Diretório de origem do arquivo
+        origem = f"arquivos/{nome_arquivo}"
+        # Diretório de destino da mesa
+        destino = f"mesas_ativas/mesa_{id_mesa}"
+        
+        # Verifica se o diretório de destino existe, se não, cria-o
+        if not os.path.exists(destino):
+            os.makedirs(destino)
+        
+        # Move o arquivo para o diretório de destino
+        shutil.move(origem, destino)
+
+def mover_arquivos(id_mesa):
+    # Definindo os caminhos das pastas
+    pasta_origem = f"mesas_ativas/mesa_{id_mesa}"
+    pasta_destino = "AIs"
+    
+    # Verificando se a pasta de origem existe
+    if not os.path.exists(pasta_origem):
+        print(f"A pasta {pasta_origem} não existe.")
+        return
+    
+    # Verificando se a pasta de destino existe, se não, criando-a
+    if not os.path.exists(pasta_destino):
+        os.makedirs(pasta_destino)
+    
+    # Apagando todos os arquivos na pasta de destino
+    for arquivo in os.listdir(pasta_destino):
+        arquivo_path = os.path.join(pasta_destino, arquivo)
+        try:
+            if os.path.isfile(arquivo_path):
+                os.unlink(arquivo_path)
+        except Exception as e:
+            print(f"Erro ao apagar {arquivo_path}: {e}")
+    
+    # Movendo os arquivos da pasta de origem para a pasta de destino
+    for arquivo in os.listdir(pasta_origem):
+        arquivo_path_origem = os.path.join(pasta_origem, arquivo)
+        arquivo_path_destino = os.path.join(pasta_destino, arquivo)
+        try:
+            shutil.move(arquivo_path_origem, arquivo_path_destino)
+        except Exception as e:
+            print(f"Erro ao mover {arquivo_path_origem} para {arquivo_path_destino}: {e}")
+    
+    print("Arquivos movidos com sucesso!")
