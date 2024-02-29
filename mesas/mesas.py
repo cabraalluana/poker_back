@@ -115,7 +115,26 @@ def consultar_mesas_e_codigos(id_mesas):
     print(tabela)
 
 def criar_pastas_mesas_ativas():
-    bdMesas.criar_pastas_mesas_ativas()
+    caminho_pasta = 'mesas_ativas'
+    if not os.path.exists(caminho_pasta):
+        os.makedirs(caminho_pasta)
+    else:
+        # Itera sobre todos os arquivos na pasta
+        for arquivo in os.listdir(caminho_pasta):
+            try:
+                # Monta o caminho completo do arquivo
+                caminho_arquivo = os.path.join(caminho_pasta, arquivo)
+                # Verifica se é um arquivo e não um diretório
+                if os.path.isfile(caminho_arquivo):
+                    # Remove o arquivo
+                    os.unlink(caminho_arquivo)
+                # Se for um diretório, remove recursivamente
+                elif os.path.isdir(caminho_arquivo):
+                    shutil.rmtree(caminho_arquivo)
+            except Exception as e:
+                print(f"Erro ao apagar {caminho_arquivo}: {e}")
+
+    bdMesas.criar_pastas_mesas_ativas(caminho_pasta)
 
 def separar_codigos():
     return bdMesas.separar_codigos()
@@ -140,10 +159,12 @@ def mover_arquivos(id_mesa):
     pasta_origem = f"mesas_ativas/mesa_{id_mesa}"
     pasta_destino = "AIs"
     
-    # Verificando se a pasta de origem existe
+    # Lista para armazenar os nomes dos arquivos que estão sendo movidos
+    arquivos_movidos = []
+    
+    # Verificando se a pasta de origem existe, se não, criando-a
     if not os.path.exists(pasta_origem):
-        print(f"A pasta {pasta_origem} não existe.")
-        return
+        os.makedirs(pasta_origem)
     
     # Verificando se a pasta de destino existe, se não, criando-a
     if not os.path.exists(pasta_destino):
@@ -159,12 +180,17 @@ def mover_arquivos(id_mesa):
             print(f"Erro ao apagar {arquivo_path}: {e}")
     
     # Movendo os arquivos da pasta de origem para a pasta de destino
-    for arquivo in os.listdir(pasta_origem):
+    for indice, arquivo in enumerate(os.listdir(pasta_origem), start=1):
         arquivo_path_origem = os.path.join(pasta_origem, arquivo)
-        arquivo_path_destino = os.path.join(pasta_destino, arquivo)
+        arquivos_movidos.append(arquivo)  # Adicionando o nome do arquivo à lista
+        novo_nome = f"IA{indice}{os.path.splitext(arquivo)[1]}"
+        arquivo_path_destino = os.path.join(pasta_destino, novo_nome)
         try:
             shutil.move(arquivo_path_origem, arquivo_path_destino)
         except Exception as e:
             print(f"Erro ao mover {arquivo_path_origem} para {arquivo_path_destino}: {e}")
     
     print("Arquivos movidos com sucesso!")
+    print("=====================================================================")
+    
+    return arquivos_movidos

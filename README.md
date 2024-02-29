@@ -24,9 +24,14 @@ Para executar a aplicação, siga estes passos:
 
 1. Abra um novo terminal na IDE do Visual Studio Code (Ctrl+J).
 2. Crie um ambiente virtual na pasta do projeto executando o seguinte comando:
-   ```
-   python -m virtualenv .venv
-   ```
+   - **Windows**:
+      ```
+      python -m virtualenv .venv
+      ```
+   - **Linux/macOS**:
+      ```
+      python3 -m venv .venv
+      ```
 
 3. Ative o ambiente virtual. Dependendo do seu sistema operacional, você pode precisar executar o seguinte comando:
    - **Windows**:
@@ -51,9 +56,14 @@ Para executar a aplicação, siga estes passos:
    ```
 
 6. Agora você está pronto para iniciar a aplicação! Para executar o programa, basta digitar o seguinte comando no terminal:
-   ```
-   python main.py
-   ```
+   - **Windows**:
+      ```
+      python main.py
+      ```
+   - **Linux/macOS**:
+      ```
+      python3 main.py
+      ```
 
 # Observações
 

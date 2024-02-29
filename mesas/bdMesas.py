@@ -12,13 +12,12 @@ conn.execute('PRAGMA encoding = "UTF-8"')
 cursor = conn.cursor()
 
 # Cria a tabela TABELA_MESA se não existir
-cursor.execute("""
-               CREATE TABLE IF NOT EXISTS "TABELA_MESA" (
-	           "idMesa"    INTEGER NOT NULL UNIQUE,
-               "status"    TEXT NOT NULL,
-               PRIMARY KEY("idMesa" AUTOINCREMENT)
-               );
-               """)
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS TABELA_MESA (
+        idMesa INTEGER PRIMARY KEY AUTOINCREMENT,
+        status INTEGER NOT NULL DEFAULT 0 CHECK (status IN (0, 1))
+    )
+''') #0 - representa mesas inativas e 1 - representa mesas ativas
 
 # Cria a tabela CODIGO_MESA se não existir
 cursor.execute("""
@@ -40,7 +39,7 @@ def criar_mesa_e_vincular_codigos(listas_de_codigos):
         # Itera sobre as listas de códigos
         for i, lista_de_codigos in enumerate(listas_de_codigos, start=1):
             # Insere uma nova mesa com status "ativo"
-            cursor.execute("INSERT INTO TABELA_MESA (status) VALUES (?)", ('ativo',))
+            cursor.execute("INSERT INTO TABELA_MESA (status) VALUES (?)", ('1',))
             mesa_id = cursor.lastrowid  # Obtém o ID da última mesa inserida
             
             # Vincula os códigos à mesa na tabela CODIGO_MESA
@@ -86,10 +85,7 @@ def consultar_mesas_e_codigos(id_mesas):
 
     return resultados
 
-def criar_pastas_mesas_ativas():
-    # Caminho onde deseja criar as pastas
-    caminho_pasta = 'mesas_ativas'
-
+def criar_pastas_mesas_ativas(caminho_pasta):
     # Consulta para selecionar idCodigo e status da tabela
     cursor.execute("SELECT idMesa, status FROM TABELA_MESA")
 
@@ -106,7 +102,6 @@ def criar_pastas_mesas_ativas():
             # Verificar se a pasta não existe antes de criar
             if not os.path.exists(caminho_completo):
                 os.makedirs(caminho_completo)
-                print(f"Pasta '{caminho_completo}' criada com sucesso.")
 
 def separar_codigos():
     # Consulta SQL para obter o nome do arquivo e o id da mesa

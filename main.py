@@ -2,6 +2,7 @@
 from usuarios import usuarios
 from codigos import codigos
 from mesas import mesas
+from resultados import resultados
 import getpass
 
 def main():
@@ -26,6 +27,7 @@ def main():
             usuarios.bdUsuarios.conn.close()
             codigos.bdCodigos.conn.close()
             mesas.bdMesas.conn.close()
+            resultados.bdResultados.conn.close()
             break
         else:
             print("=====================================================================")
@@ -154,8 +156,11 @@ def areaMesas():
         # Realizar ações com base na escolha
         if escolha == 1:
             # Separar mesas e vincular códigos
-            resultados = mesas.sortear_mesas(codigos.numeroJogadores(), codigos.listaIDs())
-            mesas.criar_mesa_e_vincular_codigos(resultados)
+            if codigos.numeroJogadores() == 0:
+                print("Todos os jogadores estão em uma partida.")
+            else:
+                res = mesas.sortear_mesas(codigos.numeroJogadores(), codigos.listaIDs())
+                mesas.criar_mesa_e_vincular_codigos(res)
         elif escolha == 2:
             print("=====================================================================")
             id_mesas = mesas.obter_id_mesas()
@@ -163,27 +168,25 @@ def areaMesas():
         elif escolha == 3:
             print("=====================================================================")
             mesas.criar_pastas_mesas_ativas()
-            print("=====================================================================")
             print("Pastas das mesas ativas criadas com sucesso!")
             print("=====================================================================")
             lista_id_arquivo = mesas.separar_codigos()
-            print("=====================================================================")
-            # Exibir a lista
-            print(lista_id_arquivo)
-            print("=====================================================================")
             mesas.dividir_codigo_mesas(lista_id_arquivo)
-            print("=====================================================================")
             print("Arquivos movidos com sucesso!")
+            print("=====================================================================")
             while True:
-                print("=====================================================================")
                 print("1 - Rodar mesa")
                 print("0 - Voltar da área das mesas.")
                 # Solicitar a escolha da área de mesas
                 escolha = int(input("Escolha uma opção: "))
+                print("=====================================================================")
 
                 if escolha == 1:
                     id_mesa = input("Informe o ID da mesa: ")
-                    mesas.mover_arquivos(id_mesa)
+                    print("=====================================================================")
+                    # Chamando a função para modificar o dataframe
+                    df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
+                    resultados.salvar_resultado(df_resultados, id_mesa)
                 elif escolha == 0:
                     break
                 else:

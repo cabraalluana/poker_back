@@ -42,10 +42,19 @@ def salvarCodigo(arquivo, idUsuario):
 
 def numeroJogadores():
     """
-    Esta função retorna o número de jogadores que enviaram códigos
+    Esta função retorna o número de jogadores que enviaram códigos que não estão em uma mesa com status ativa.
     :return: Número de jogadores
     """
-    cursor.execute("SELECT COUNT(*) FROM TABELA_CODIGO")
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM TABELA_CODIGO
+        WHERE idCodigo NOT IN (
+            SELECT idCodigo
+            FROM CODIGO_MESA
+            INNER JOIN TABELA_MESA ON CODIGO_MESA.idMesa = TABELA_MESA.idMesa
+            WHERE TABELA_MESA.status = '1'
+        )
+    """)
 
     return cursor.fetchone()[0]
 
