@@ -55,14 +55,15 @@ def criar_mesa_e_vincular_codigos(listas_de_codigos):
         conn.execute("ROLLBACK")
         print(f"Erro ao criar mesas e vincular códigos: {e}")
 
-def obter_id_mesas():
-    query = "SELECT idMesa FROM TABELA_MESA"
+def obter_id_mesas(status):
+    # Consulta SQL para obter os ids de mesas com o status fornecido
+    query = "SELECT idMesa FROM TABELA_MESA WHERE status = ?"
 
-    # Execute a consulta
-    cursor.execute(query)
+    # Executar a consulta
+    cursor.execute(query, (status,))
+    id_mesas = [row[0] for row in cursor.fetchall()]
 
-    # Obtenha os resultados usando fetchall()
-    return cursor.fetchall()
+    return id_mesas
     
 
 def consultar_mesas_e_codigos(id_mesas):
@@ -121,3 +122,18 @@ def separar_codigos():
     lista_id_arquivo = [(idMesa, arquivo) for arquivo, idMesa in resultados]
 
     return lista_id_arquivo
+
+def verificar_codigos_em_mesa(lista_id_codigos):
+    # Consulta SQL para verificar se algum dos códigos está em uma mesa com status 1
+    query = """
+        SELECT COUNT(*) FROM CODIGO_MESA
+        INNER JOIN TABELA_MESA ON CODIGO_MESA.idMesa = TABELA_MESA.idMesa
+        WHERE CODIGO_MESA.idCodigo IN ({}) AND TABELA_MESA.status = 1
+    """.format(','.join(['?'] * len(lista_id_codigos)))
+
+    # Executar a consulta
+    cursor.execute(query, lista_id_codigos)
+    count = cursor.fetchone()[0]
+
+    # Se count for maior que 0, significa que pelo menos um código está em uma mesa com status 1
+    return count > 0

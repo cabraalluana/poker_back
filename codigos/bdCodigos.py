@@ -23,7 +23,8 @@ cursor.execute("""
 
 def salvarCodigo(arquivo, idUsuario):
     """
-    Esta função apaga o código existente do usuário (se houver) e adiciona o novo código para a competição no banco de dados
+    Esta função apaga o código existente do usuário (se houver) e adiciona o novo código para a 
+    competição no banco de dados
     :param arquivo: O conteúdo do código a ser salvo
     :param idUsuario: O ID do usuário que está enviando o código
     """
@@ -120,10 +121,10 @@ def apagar_linha_por_id_usuario(id_usuario):
         
         # Commit para salvar as alterações no banco de dados
         conn.commit()
-        print(f"Linha apagada para idUsuario {id_usuario}")
+        print(f"Códigos apagado para idUsuario {id_usuario}")
         return True
     except Exception as e:
         # Em caso de erro, desfaz as alterações
         conn.rollback()
-        print(f"Erro ao apagar linha: {e}")
+        print(f"Erro ao apagar código: {e}")
         return False

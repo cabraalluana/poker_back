@@ -94,8 +94,11 @@ def usuarioLogado(email):
             dadosUsuario[1] = dadosUsuario[1].encode('latin-1').decode('utf-8')
         elif escolhaUsuario == 3:
             # Apagar conta do usuário e seus códigos
-            if usuarios.apagarContaUsuario(dadosUsuario[0]) and codigos.apagar_linha_por_id_usuario(dadosUsuario[0]):
-                break
+            if mesas.verificar_codigos_em_mesa(codigos.codigosEnviados(dadosUsuario)):
+                print(f"Usuário {dadosUsuario[1]} está em uma partida ativa.")
+            else:
+                if usuarios.apagarContaUsuario(dadosUsuario[0]) and codigos.apagar_linha_por_id_usuario(dadosUsuario[0]):
+                    break
         elif escolhaUsuario == 0:
             break
         else:
@@ -146,8 +149,9 @@ def areaMesas():
         print("=====================================================================")
         print("Área das mesas")
         print("1 - Separar mesas;")
-        print("2 - Listar mesas")
-        print("3 - Rodar mesas")
+        print("2 - Listar mesas ativas")
+        print("3 - Listar mesas inativas")
+        print("4 - Rodar mesas")
         print("0 - Sair da área das mesas.")
         
         # Solicitar a escolha da área de mesas
@@ -163,9 +167,13 @@ def areaMesas():
                 mesas.criar_mesa_e_vincular_codigos(res)
         elif escolha == 2:
             print("=====================================================================")
-            id_mesas = mesas.obter_id_mesas()
-            mesas.consultar_mesas_e_codigos(id_mesas)
+            id_mesas = mesas.obter_id_mesas(1)
+            mesas.consultar_mesas_e_codigos(id_mesas, 1)
         elif escolha == 3:
+            print("=====================================================================")
+            id_mesas = mesas.obter_id_mesas(0)
+            mesas.consultar_mesas_e_codigos(id_mesas, 0)
+        elif escolha == 4:
             print("=====================================================================")
             mesas.criar_pastas_mesas_ativas()
             print("Pastas das mesas ativas criadas com sucesso!")

@@ -59,5 +59,7 @@ def codigosEnviados(dados_usuario_desejado):
     else:
         print(f"Não foram encontrados códigos enviados por {dados_usuario_desejado[1]}.")
 
+    return codigos_do_usuario
+
 def apagar_linha_por_id_usuario(id_usuario):
     return bdCodigos.apagar_linha_por_id_usuario(id_usuario)

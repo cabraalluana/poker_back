@@ -89,21 +89,25 @@ def criar_mesa_e_vincular_codigos(listas_de_codigos):
     bdMesas.criar_mesa_e_vincular_codigos(listas_de_codigos)  # Chamada à função do módulo bdMesas
 
 # Definir a função para obter os IDs das mesas
-def obter_id_mesas():
-    # Utilizar uma list comprehension para extrair o primeiro elemento de cada linha
-    # obtida da função bdMesas.obter_id_mesas()
-    id_mesas = [linha[0] for linha in bdMesas.obter_id_mesas()]
-
+def obter_id_mesas(status):
     # Retornar a lista de IDs das mesas
-    return id_mesas
+    return bdMesas.obter_id_mesas(status)
 
-def consultar_mesas_e_codigos(id_mesas):
+def consultar_mesas_e_codigos(id_mesas, status):
+    # Verificar se id_mesas não é uma lista vazia
+    if not id_mesas:
+        if status == 1:
+            print("Não existe nenhuma mesa ativa no momento")
+        else:
+            print("Não existe nenhuma mesa inativa no momento")
+        return
+
     # Criar uma tabela
     tabela = PrettyTable()
-    
+
     # Definir os nomes das colunas da tabela
     tabela.field_names = ["idMesa", "idCodigo", "nome"]
-    
+
     # Obter os dados do banco de dados usando a função bdMesas.consultar_mesas_e_codigos
     for tupla in bdMesas.consultar_mesas_e_codigos(id_mesas):
         # Iterar sobre os resultados da consulta
@@ -194,3 +198,7 @@ def mover_arquivos(id_mesa):
     print("=====================================================================")
     
     return arquivos_movidos
+
+def verificar_codigos_em_mesa(lista_id_codigos):
+    # Se count for maior que 0, significa que pelo menos um código está em uma mesa com status 1
+    return bdMesas.verificar_codigos_em_mesa(lista_id_codigos)
