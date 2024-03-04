@@ -194,6 +194,7 @@ def areaMesas():
                     print("=====================================================================")
                     # Chamando a função para modificar o dataframe
                     df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
+                    mesas.alterar_status_mesa(id_mesa)
                     resultados.salvar_resultado(df_resultados, id_mesa)
                 elif escolha == 0:
                     break

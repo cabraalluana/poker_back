@@ -81,8 +81,12 @@ def consultar_mesas_e_codigos(id_mesas):
             WHERE TABELA_MESA.idMesa = ?
         """, (id_mesa,))
 
-        # Adicionar os resultados da consulta à lista de resultados
-        resultados.append(cursor.fetchall())
+        # Verificar se há resultados na consulta
+        rows = cursor.fetchall()
+        if not rows:  # Se não houver resultados, adicione a mensagem de "Dado apagado do sistema"
+            resultados.append("Dado apagado do sistema")
+        else:  # Caso contrário, adicione os resultados à lista de resultados
+            resultados.append(rows)
 
     return resultados
 
@@ -137,3 +141,15 @@ def verificar_codigos_em_mesa(lista_id_codigos):
 
     # Se count for maior que 0, significa que pelo menos um código está em uma mesa com status 1
     return count > 0
+
+def alterar_status_mesa(id_mesa):
+    try:
+        # Executando a atualização
+        cursor.execute("UPDATE TABELA_MESA SET status = 0 WHERE idMesa = ?", (id_mesa,))
+        
+        # Commitando a transação
+        conn.commit()
+        
+        return True  # Retorna True se a atualização for bem-sucedida
+    except sqlite3.Error as e:
+        return e  # Retorna False se ocorrer algum erro

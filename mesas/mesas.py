@@ -202,3 +202,9 @@ def mover_arquivos(id_mesa):
 def verificar_codigos_em_mesa(lista_id_codigos):
     # Se count for maior que 0, significa que pelo menos um código está em uma mesa com status 1
     return bdMesas.verificar_codigos_em_mesa(lista_id_codigos)
+
+def alterar_status_mesa(id_mesa):
+    if bdMesas.alterar_status_mesa(id_mesa):
+        pass
+    else:
+        print("Erro ao alterar o status da mesa:", bdMesas.alterar_status_mesa(id_mesa))

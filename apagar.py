@@ -7,7 +7,7 @@ conn = sqlite3.connect('bdPoker.db')
 cursor = conn.cursor()
 
 # Comando SQL para apagar a tabela
-sql_query = "DROP TABLE IF EXISTS TABELA_RESULTADOS;"
+sql_query = "DROP TABLE IF EXISTS TABELA_MESA;"
 
 # Executando o comando SQL
 cursor.execute(sql_query)
