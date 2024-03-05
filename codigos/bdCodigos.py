@@ -64,7 +64,14 @@ def listaIDs():
     Esta função retorna uma lista de IDs dos códigos enviados
     :return: Lista de IDs dos códigos
     """
-    cursor.execute('SELECT idCodigo FROM TABELA_CODIGO')
+    cursor.execute("""SELECT idCodigo
+                   FROM TABELA_CODIGO
+                   WHERE idCodigo NOT IN (
+                        SELECT idCodigo
+                        FROM CODIGO_MESA
+                        INNER JOIN TABELA_MESA ON CODIGO_MESA.idMesa = TABELA_MESA.idMesa
+                        WHERE TABELA_MESA.status = '1')
+                   """)
 
     # Obtém os IDs dos códigos como uma lista
     id_codigo_list = [row[0] for row in cursor.fetchall()]
