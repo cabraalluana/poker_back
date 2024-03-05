@@ -28,6 +28,10 @@ Para executar a aplicação, siga estes passos:
       ```
       python -m virtualenv .venv
       ```
+      ou
+      ```
+      python -m venv .venv
+      ```
    - **Linux/macOS**:
       ```
       python3 -m venv .venv
