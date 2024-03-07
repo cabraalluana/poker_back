@@ -160,8 +160,8 @@ def areaMesas():
         # Realizar ações com base na escolha
         if escolha == 1:
             # Separar mesas e vincular códigos
-            if codigos.numeroJogadores() == 0:
-                print("Todos os jogadores estão em uma partida.")
+            if codigos.numeroJogadores() < 3:
+                print("Todos os jogadores estão em uma partida ou não há jogadores o suficiente para uma nova mesa. (Mínimo 3)")
             else:
                 res = mesas.sortear_mesas(codigos.numeroJogadores(), codigos.listaIDs())
                 mesas.criar_mesa_e_vincular_codigos(res)
