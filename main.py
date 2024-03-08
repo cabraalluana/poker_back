@@ -149,9 +149,9 @@ def areaMesas():
         print("=====================================================================")
         print("Área das mesas")
         print("1 - Separar mesas;")
-        print("2 - Listar mesas ativas")
-        print("3 - Listar mesas inativas")
-        print("4 - Rodar mesas")
+        print("2 - Listar mesas ativas;")
+        print("3 - Listar mesas inativas;")
+        print("4 - Rodar mesas ativas;")
         print("0 - Sair da área das mesas.")
         
         # Solicitar a escolha da área de mesas
@@ -182,25 +182,13 @@ def areaMesas():
             mesas.dividir_codigo_mesas(lista_id_arquivo)
             print("Arquivos movidos com sucesso!")
             print("=====================================================================")
-            while True:
-                print("1 - Rodar mesa")
-                print("0 - Voltar da área das mesas.")
-                # Solicitar a escolha da área de mesas
-                escolha = int(input("Escolha uma opção: "))
-                print("=====================================================================")
-
-                if escolha == 1:
-                    id_mesa = input("Informe o ID da mesa: ")
-                    print("=====================================================================")
-                    # Chamando a função para modificar o dataframe
-                    df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
-                    mesas.alterar_status_mesa(id_mesa)
-                    resultados.salvar_resultado(df_resultados, id_mesa)
-                elif escolha == 0:
-                    break
-                else:
-                    print("=====================================================================")
-                    print("Escolha uma opção válida")
+            ids_mesa = mesas.obter_id_mesas(1)
+            print("=====================================================================")
+            # Chamando a função para modificar o dataframe
+            for id_mesa in ids_mesa:
+                df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
+                mesas.alterar_status_mesa(id_mesa)
+                resultados.salvar_resultado(df_resultados, id_mesa)
         elif escolha == 0:
             break
         else:
