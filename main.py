@@ -161,6 +161,7 @@ def areaMesas():
         if escolha == 1:
             # Separar mesas e vincular códigos
             if codigos.numeroJogadores() < 3:
+                print("=====================================================================")
                 print("Todos os jogadores estão em uma partida ou não há jogadores o suficiente para uma nova mesa. (Mínimo 3)")
             else:
                 res = mesas.sortear_mesas(codigos.numeroJogadores(), codigos.listaIDs())
@@ -175,20 +176,23 @@ def areaMesas():
             mesas.consultar_mesas_e_codigos(id_mesas, 0)
         elif escolha == 4:
             print("=====================================================================")
-            mesas.criar_pastas_mesas_ativas()
-            print("Pastas das mesas ativas criadas com sucesso!")
-            print("=====================================================================")
-            lista_id_arquivo = mesas.separar_codigos()
-            mesas.dividir_codigo_mesas(lista_id_arquivo)
-            print("Arquivos movidos com sucesso!")
-            print("=====================================================================")
-            ids_mesa = mesas.obter_id_mesas(1)
-            print("=====================================================================")
-            # Chamando a função para modificar o dataframe
-            for id_mesa in ids_mesa:
-                df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
-                mesas.alterar_status_mesa(id_mesa)
-                resultados.salvar_resultado(df_resultados, id_mesa)
+            lista_id_mesa = mesas.criar_pastas_mesas_ativas()
+            if lista_id_mesa:
+                print("Pastas das mesas ativas criadas com sucesso!")
+                print("=====================================================================")
+                lista_id_arquivo = mesas.separar_codigos()
+                mesas.dividir_codigo_mesas(lista_id_arquivo)
+                print("Arquivos movidos com sucesso!")
+                print("=====================================================================")
+                ids_mesa = mesas.obter_id_mesas(1)
+                print("=====================================================================")
+                # Chamando a função para modificar o dataframe
+                for id_mesa in ids_mesa:
+                    df_resultados = resultados.resultado_mesa(resultados.ler_csv_para_dataframe(), mesas.mover_arquivos(id_mesa))
+                    mesas.alterar_status_mesa(id_mesa)
+                    resultados.salvar_resultado(df_resultados, id_mesa)
+            else:
+                print("Não existem mesas ativas no momento.")
         elif escolha == 0:
             break
         else:

@@ -138,7 +138,21 @@ def criar_pastas_mesas_ativas():
             except Exception as e:
                 print(f"Erro ao apagar {caminho_arquivo}: {e}")
 
-    bdMesas.criar_pastas_mesas_ativas(caminho_pasta)
+    listaIdMesa = bdMesas.criar_pastas_mesas_ativas(caminho_pasta)
+    
+    # Iterar sobre os resultados
+    for idMesa in listaIdMesa:
+        # Criar o nome da pasta
+        nome_pasta = f'mesa_{idMesa}'
+            
+        # Caminho completo da pasta
+        caminho_completo = os.path.join(caminho_pasta, nome_pasta)
+            
+        # Verificar se a pasta não existe antes de criar
+        if not os.path.exists(caminho_completo):
+            os.makedirs(caminho_completo)
+            
+    return listaIdMesa
 
 def separar_codigos():
     return bdMesas.separar_codigos()

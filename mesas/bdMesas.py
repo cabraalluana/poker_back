@@ -91,30 +91,19 @@ def consultar_mesas_e_codigos(id_mesas):
     return resultados
 
 def criar_pastas_mesas_ativas(caminho_pasta):
-    # Consulta para selecionar idCodigo e status da tabela
-    cursor.execute("SELECT idMesa, status FROM TABELA_MESA")
-
-    # Iterar sobre os resultados
-    for row in cursor.fetchall():
-        idCodigo, status = row
-        if status == 'ativo':
-            # Criar o nome da pasta
-            nome_pasta = f'mesa_{idCodigo}'
-            
-            # Caminho completo da pasta
-            caminho_completo = os.path.join(caminho_pasta, nome_pasta)
-            
-            # Verificar se a pasta não existe antes de criar
-            if not os.path.exists(caminho_completo):
-                os.makedirs(caminho_completo)
+    # Consulta para selecionar idMesa em que status = 1 (mesa ativa)
+    cursor.execute("SELECT idMesa FROM TABELA_MESA WHERE status = 1")
+    
+    return cursor.fetchall()
 
 def separar_codigos():
     # Consulta SQL para obter o nome do arquivo e o id da mesa
     consulta = """
-    SELECT TC.arquivo, CM.idMesa
-    FROM CODIGO_MESA CM
-    JOIN TABELA_CODIGO TC ON CM.idCodigo = TC.idCodigo;
-    """
+    SELECT TABELA_CODIGO.arquivo, TABELA_MESA.idMesa
+    FROM TABELA_CODIGO
+    JOIN CODIGO_MESA ON TABELA_CODIGO.idCodigo = CODIGO_MESA.idCodigo
+    JOIN TABELA_MESA ON CODIGO_MESA.idMesa = TABELA_MESA.idMesa
+    WHERE TABELA_MESA.status = 1"""
 
     # Executar a consulta
     cursor.execute(consulta)
